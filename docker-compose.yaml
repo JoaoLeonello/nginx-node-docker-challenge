@@ -1,0 +1,50 @@
+version: '3'
+
+services:
+
+  nodejs:
+    build:
+      context: node
+      dockerfile: Dockerfile
+    container_name: node
+    networks: 
+      - bridge_network
+    volumes:
+      - ./node:/usr/src/app
+    tty: true
+    ports:
+      - "3000"
+
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile 
+    image: nginx
+    container_name: nginx
+    networks:
+      - bridge_network
+    ports:
+     - "8080:80"
+
+  db:
+    build:
+      context: mysql
+      dockerfile: Dockerfile
+    container_name: db
+    command: --innodb-use-native-aio=0
+    restart: always
+    tty: true
+    volumes: 
+      - ./mysql/volume:/var/lib/mysql
+    environment:
+      - MYSQL_DATABASE=nodedb
+      - MYSQL_ROOT_PASSWORD=root 
+    networks:
+      - bridge_network
+    ports: 
+      - 127.0.0.1:33060:3306
+
+networks:
+  bridge_network:
+    driver: bridge
+      
