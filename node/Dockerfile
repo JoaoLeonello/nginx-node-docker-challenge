@@ -4,10 +4,6 @@ RUN apk update
 RUN apk upgrade
 RUN apk add bash
 
-RUN mkdir /usr/src
-RUN mkdir /usr/src/app/cache
-WORKDIR /usr/src/app/cache
-
 COPY package.json ./
 COPY package-lock.json ./
 RUN npm install
